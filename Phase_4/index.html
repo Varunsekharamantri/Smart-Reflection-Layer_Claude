@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude</title>
+  
+  <!-- Claude Font Pairings: Outfit (Branding/Headers), Inter (UI Components), Lora (Assistant Serif Text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- SVG Global Glow Filters Definition -->
+  <svg style="position: absolute; width: 0; height: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <filter id="glow-orange" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur1" />
+        <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur2" />
+        <feMerge>
+          <feMergeNode in="blur1" />
+          <feMergeNode in="blur2" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- View Mode Switcher Toggle Bar -->
+  <div class="view-mode-toggle-container">
+    <button class="toggle-btn active" id="toggle-mobile" tabindex="0" aria-label="Switch to Mobile App View">
+      <svg class="toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+      Mobile App
+    </button>
+    <button class="toggle-btn" id="toggle-desktop" tabindex="0" aria-label="Switch to Desktop Web View">
+      <svg class="toggle-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
+      Desktop Web
+    </button>
+  </div>
+
+  <!-- Premium Mobile Frame Wrapper -->
+  <div class="device-wrapper">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="status-icons">
+        <svg class="status-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+        <svg class="status-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.4z"/></svg>
+        <svg class="status-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M17 5H7c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2z"/></svg>
+      </div>
+    </div>
+
+    <!-- Application Body -->
+    <div class="chat-app-container">
+      
+      <!-- Top Navigation Header - Identical to Claude's mobile header -->
+      <header class="app-header">
+        <button class="header-action-btn" id="menu-btn" tabindex="0" role="button" aria-label="Open navigation menu">
+          <!-- Hamburger menu SVG -->
+          <svg viewBox="0 0 24 24" class="header-icon"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        
+        <div class="app-brand">
+          <img class="brand-logo-img" src="logo.png" alt="Claude">
+        </div>
+        
+        <button class="header-action-btn" id="new-draft-btn" tabindex="0" role="button" aria-label="Start new draft">
+          <!-- Pencil & paper pen-edit draft icon -->
+          <svg viewBox="0 0 24 24" class="header-icon"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"/></svg>
+        </button>
+      </header>
+ 
+      <!-- Scrollable Message Feed -->
+      <main class="chat-viewport" id="chat-viewport" tabindex="-1">
+        
+        <!-- Welcome Screen (Visible by default, hidden once chat starts) -->
+        <div class="welcome-container" id="welcome-container">
+          <div class="welcome-header">
+            <div class="welcome-greeting-group">
+              <h1 class="welcome-title">Hello, night owl</h1>
+            </div>
+          </div>
+
+          <!-- Central Input card mirroring the screenshot layout -->
+          <div class="welcome-input-card">
+            <textarea class="welcome-text-area" id="welcome-prompt-input" rows="1" placeholder="How can I help you today?"></textarea>
+            <div class="welcome-input-footer">
+              <button class="welcome-action-btn-left" aria-label="Upload document or files">
+                <svg viewBox="0 0 24 24" class="footer-icon"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>
+              </button>
+              <div class="welcome-footer-right">
+                <span class="welcome-model-indicator" title="Current Active Reasoning Model">
+                  Llama 3.3 70B
+                  <svg class="chevron-down-svg" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+                </span>
+                <button class="welcome-action-btn-right" aria-label="Voice input record">
+                  <svg viewBox="0 0 24 24" class="footer-icon"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8"/></svg>
+                </button>
+                <button class="welcome-speech-wave-btn" aria-label="Speech mode active">
+                  <svg viewBox="0 0 24 24" class="footer-icon"><path fill="currentColor" d="M12 3v18M8 6v12M16 8v8M4 10v4M20 10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Premium Pill Suggestions row mirroring the screenshot -->
+          <div class="welcome-pills-row">
+            <button class="welcome-pill-btn" onclick="selectSuggestion('Write a strategic positioning analysis for our product')">
+              <svg viewBox="0 0 24 24" class="pill-icon"><path fill="none" stroke="currentColor" stroke-width="2" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"/></svg>
+              Write
+            </button>
+            <button class="welcome-pill-btn" onclick="selectSuggestion('Evaluate the market entry boundaries and SaaS alternative perspectives')">
+              <svg viewBox="0 0 24 24" class="pill-icon"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 2L2 22h20L12 2z"/></svg>
+              Learn
+            </button>
+            <button class="welcome-pill-btn" onclick="selectSuggestion('Format this raw python cohort list cleanly')">
+              <svg viewBox="0 0 24 24" class="pill-icon"><path fill="none" stroke="currentColor" stroke-width="2" d="M8 9l-4 4 4 4m8-8l4 4-4 4m-2-12l-4 16"/></svg>
+              Code
+            </button>
+            <button class="welcome-pill-btn" onclick="selectSuggestion('Should I prioritize PLG growth for our B2B SaaS product?')">
+              <svg viewBox="0 0 24 24" class="pill-icon"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H5c0-3.87 3.13-7 7-7s7 3.13 7 7c0 1.17-.45 2.23-1.17 3.07z"/></svg>
+              Life stuff
+            </button>
+            <button class="welcome-pill-btn" onclick="selectSuggestion('Import context and assumptions from our project data')">
+              <svg viewBox="0 0 24 24" class="pill-icon"><path fill="none" stroke="currentColor" stroke-width="2" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+              From Drive
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Chat Thread (starts empty, filled dynamically) -->
+        <div class="chat-thread" id="chat-thread">
+          <!-- Filled dynamically by app.js -->
+        </div>
+      </main>
+
+      <!-- Bottom Chat Inputs - Replicating Claude's clean prompt input -->
+      <footer class="chat-footer-bar">
+        <div class="input-actions-wrapper">
+          <button class="footer-action-btn" id="attach-btn" tabindex="0" role="button" aria-label="Upload document or files">
+            <!-- Plus attachment icon -->
+            <svg viewBox="0 0 24 24" class="footer-icon"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>
+          </button>
+          
+          <div class="text-input-frame">
+            <textarea class="chat-text-area" id="prompt-input" rows="1" tabindex="0" aria-label="Message text entry" placeholder="Message Claude..."></textarea>
+          </div>
+          
+          <button class="footer-action-btn speech-wave-btn" id="speech-btn" tabindex="0" role="button" aria-label="Voice input record">
+            <!-- Mic icon inside dark round button -->
+            <svg viewBox="0 0 24 24" class="footer-icon"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM19 10v1a7 7 0 0 1-14 0v-1M12 19v3M8 22h8"/></svg>
+          </button>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

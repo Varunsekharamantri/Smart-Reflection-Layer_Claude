@@ -1,0 +1,24 @@
+# Python Cache and Compilation
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment Credentials and Configs
+.env
+.env.txt
+.env.local
+.env.*
+
+# OS and IDE configuration files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local antigravity-ide and other system folders
+.gemini/
+brain/
+logs/
+.system_generated/
+Prompts_SRL.md 

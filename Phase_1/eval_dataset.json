@@ -1,0 +1,50 @@
+{
+  "strategic": [
+    {
+      "prompt": "Should I prioritize PLG growth for our B2B SaaS product?",
+      "reason": "Explicit strategic tradeoff query between PLG and sales-led growth inside B2B SaaS domain."
+    },
+    {
+      "prompt": "Evaluate the market entry risks for our new web platform in Europe.",
+      "reason": "Strategic synthesis query requiring risk forecasting, regulatory evaluation, and macro analysis."
+    },
+    {
+      "prompt": "How do we balance customer acquisition cost (CAC) vs lifetime value (LTV) for enterprise accounts?",
+      "reason": "Calculations and strategic modeling on key SaaS performance metrics."
+    },
+    {
+      "prompt": "Should we transition our pricing structure from traditional seat licensing to consumption-based billing?",
+      "reason": "Monetization model transition strategy involving business-model level decisions."
+    },
+    {
+      "prompt": "What are the competitive moats we can build to defend our position against fast-following tech platforms?",
+      "reason": "Long-term defensibility strategy and competitive positioning analysis."
+    }
+  ],
+  "operational": [
+    {
+      "prompt": "Format this bibliography in APA style: Maddala, N. (2026). The Illusion of Authoritative Outputs.",
+      "reason": "Simple transactional text formatting request."
+    },
+    {
+      "prompt": "Clean up this python script syntax and fix the spacing issues.",
+      "reason": "Standard code clean-up task with no reasoning requirement."
+    },
+    {
+      "prompt": "Give me the regex pattern to match standard IPv4 addresses.",
+      "reason": "Operational search query seeking a static technical string pattern."
+    },
+    {
+      "prompt": "Translate this user onboarding text segment into German and Spanish.",
+      "reason": "Direct text translation utility command."
+    },
+    {
+      "prompt": "Calculate the compound interest for $5000 at 5% annually for 3 years.",
+      "reason": "Basic math calculation command."
+    },
+    {
+      "prompt": "Capitalize all item lines in this bulleted list of product features.",
+      "reason": "Transactional text casing adjustment request."
+    }
+  ]
+}
