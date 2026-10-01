@@ -36,6 +36,15 @@ def health_check():
         "service": "Smart Reflection Layer API"
     }
 
+@app.get("/api/health/llm")
+def llm_health():
+    """Deep check: makes a tiny live Groq call. 503 if the key/model is broken."""
+    from fastapi.responses import JSONResponse
+    from Phase_4.groq_models import check_groq
+    status, detail = check_groq()
+    return JSONResponse({"status": status, "groq": detail}, status_code=503 if status == "error" else 200)
+
+
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
     """

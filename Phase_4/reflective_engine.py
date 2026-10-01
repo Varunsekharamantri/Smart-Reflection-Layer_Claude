@@ -268,40 +268,24 @@ class ReflectiveEngine:
         Queries the live Groq API for a direct, plain-text response for low-stakes queries.
         Bypasses any structured JSON requirements or reflection drawers.
         """
-        import httpx
-        api_key = os.environ.get("API_KEY")
-        if not api_key:
-            raise ValueError("API_KEY not found in environment.")
-            
-        url = "https://api.groq.com/openai/v1/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
-        
-        model = "llama-3.3-70b-versatile"
-        
+        from Phase_4.groq_models import groq_chat
+
         system_prompt = (
             "You are a helpful assistant. The user is asking a direct, low-stakes question or transactional task. "
             "Generate a direct, clear, standard text response. Do not include any strategic synthesis, "
             "tradeoff analysis, or JSON structures. Just answer the query directly and concisely."
         )
-        
-        payload = {
-            "model": model,
+
+        result = groq_chat({
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
-            "temperature": 0.3
-        }
-        
-        with httpx.Client(timeout=30.0) as client:
-            response = client.post(url, headers=headers, json=payload)
-            response.raise_for_status()
-            result = response.json()
-            
-        return result["choices"][0]["message"]["content"].strip()
+            "temperature": 0.3,
+            "max_tokens": 1500,
+        }, timeout=30.0)
+
+        return (result["choices"][0]["message"]["content"] or "").strip()
 
     def generate_low_stakes(self, prompt: str) -> ChatResponse:
         low_stakes_responses = {
@@ -320,7 +304,7 @@ class ReflectiveEngine:
             matched_text = math_val
         
         # 2. Second, try to query live LLM if API Key is present
-        elif os.environ.get("API_KEY"):
+        elif os.environ.get("API_KEY") or os.environ.get("GROQ_API_KEY"):
             try:
                 matched_text = self._generate_live_low_stakes(prompt)
             except Exception as e:
@@ -346,7 +330,7 @@ class ReflectiveEngine:
         True Groq API connection utilizing strict Structured JSON Outputs.
         """
         import httpx
-        api_key = os.environ.get("API_KEY")
+        api_key = os.environ.get("API_KEY") or os.environ.get("GROQ_API_KEY")
         if not api_key:
             raise ValueError("API_KEY not found in environment.")
             
@@ -356,8 +340,7 @@ class ReflectiveEngine:
             "Content-Type": "application/json"
         }
         
-        # Deploy Llama 3.3 70B Versatile for blazing-fast inference
-        model = "llama-3.3-70b-versatile"
+        from Phase_4.groq_models import groq_chat
         
         system_prompt = """
         You are an expert strategic reasoning AI. You must analyze the user prompt and generate a high-quality, comprehensive strategic response.
@@ -403,20 +386,15 @@ class ReflectiveEngine:
         Do not wrap it in markdown block wrappers or add text explanations outside the JSON.
         """
         
-        payload = {
-            "model": model,
+        result = groq_chat({
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ],
             "response_format": {"type": "json_object"},
-            "temperature": 0.2
-        }
-        
-        with httpx.Client(timeout=45.0) as client:
-            response = client.post(url, headers=headers, json=payload)
-            response.raise_for_status()
-            result = response.json()
+            "temperature": 0.2,
+            "max_tokens": 6000,
+        }, timeout=45.0)
             
         content_str = result["choices"][0]["message"]["content"]
         data = json.loads(content_str)
@@ -426,7 +404,7 @@ class ReflectiveEngine:
 
     def generate_strategic(self, prompt: str) -> ChatResponse:
         # Step 1: Check for active API Keys in .env (live Groq mode)
-        if os.environ.get("API_KEY"):
+        if os.environ.get("API_KEY") or os.environ.get("GROQ_API_KEY"):
             try:
                 return self._generate_live_llm(prompt)
             except Exception as e:
